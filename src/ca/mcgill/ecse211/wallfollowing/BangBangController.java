@@ -19,14 +19,16 @@ public class BangBangController implements UltrasonicController {
     this.motorHigh = motorHigh;
     WallFollowingLab.leftMotor.setSpeed(motorHigh); // Start robot moving forward
     WallFollowingLab.rightMotor.setSpeed(motorHigh);
-    WallFollowingLab.leftMotor.backward();
-    WallFollowingLab.rightMotor.backward();
+    WallFollowingLab.leftMotor.forward();
+    WallFollowingLab.rightMotor.forward();
   }
 
   @Override
   public void processUSData(int distance) {
     this.distance = distance;
-    distError = bandCenter - distance;
+    distError = distance - bandCenter;
+    
+    
     
     if (Math.abs(distError) <= bandwidth) {
     	WallFollowingLab.leftMotor.setSpeed(motorHigh);
@@ -34,18 +36,25 @@ public class BangBangController implements UltrasonicController {
         WallFollowingLab.leftMotor.forward();
         WallFollowingLab.rightMotor.forward();
     }
+    else if (distError < 0 && distError > -10) {
+    	WallFollowingLab.leftMotor.setSpeed(motorHigh);
+    	WallFollowingLab.rightMotor.setSpeed(motorLow);
+        WallFollowingLab.leftMotor.forward();
+        WallFollowingLab.rightMotor.forward();
+    }
+    else if (distError < 0 && distError <= -10) {
+    	WallFollowingLab.leftMotor.setSpeed(motorHigh);
+    	WallFollowingLab.rightMotor.setSpeed(motorHigh);
+        WallFollowingLab.leftMotor.backward();
+        WallFollowingLab.rightMotor.backward();
+    }
     else if (distError > 0) {
     	WallFollowingLab.leftMotor.setSpeed(motorLow);
     	WallFollowingLab.rightMotor.setSpeed(motorHigh);
         WallFollowingLab.leftMotor.forward();
         WallFollowingLab.rightMotor.forward();
     }
-    else if (distError < 0) {
-    	WallFollowingLab.leftMotor.setSpeed(motorHigh);
-    	WallFollowingLab.rightMotor.setSpeed(motorLow);
-        WallFollowingLab.leftMotor.forward();
-        WallFollowingLab.rightMotor.forward();
-    }
+    
     
   }
 

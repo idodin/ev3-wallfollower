@@ -10,6 +10,9 @@ public class PController implements UltrasonicController {
 
   private final int bandCenter;
   private final int bandWidth;
+  private final int GAIN = 2;
+  private int diff;
+  private int distError;
   private int distance;
   private int filterControl;
 
@@ -47,7 +50,43 @@ public class PController implements UltrasonicController {
       this.distance = distance;
     }
 
+    distError = distance - bandCenter;
+    diff = Math.abs(distError) * GAIN;
+    
+    if (Math.abs(distError) <= bandWidth) {
+    	WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED);
+    	WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED);
+        WallFollowingLab.leftMotor.forward();
+        WallFollowingLab.rightMotor.forward();
+        System.out.println("forward");
+    }
+    else if (distError > 0) {
+    	WallFollowingLab.leftMotor.setSpeed(100);
+    	WallFollowingLab.rightMotor.setSpeed(Math.min(MOTOR_SPEED+diff, 350));
+        WallFollowingLab.leftMotor.forward();
+        WallFollowingLab.rightMotor.forward();
+        System.out.println("left");
+    }
+    else if (distError < 0 && distError > -10) {
+    	WallFollowingLab.leftMotor.setSpeed(Math.min(MOTOR_SPEED+diff, 350));
+    	WallFollowingLab.rightMotor.setSpeed(60);
+        WallFollowingLab.leftMotor.forward();
+        WallFollowingLab.rightMotor.forward();
+        System.out.println("right");
+    }
+    else if (distError < 0 && distError <= -10) {
+    	WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED);
+    	WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED);
+        WallFollowingLab.leftMotor.backward();
+        WallFollowingLab.rightMotor.backward();
+        System.out.println("back");
+    }
+    
+    
+    
+    
     // TODO: process a movement based on the us distance passed in (P style)
+    
   }
 
 
