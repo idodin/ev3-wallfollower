@@ -19,8 +19,8 @@ public class BangBangController implements UltrasonicController {
     this.motorHigh = motorHigh;
     WallFollowingLab.leftMotor.setSpeed(motorHigh); // Start robot moving forward
     WallFollowingLab.rightMotor.setSpeed(motorHigh);
-    WallFollowingLab.leftMotor.forward();
-    WallFollowingLab.rightMotor.forward();
+    WallFollowingLab.leftMotor.backward();
+    WallFollowingLab.rightMotor.backward();
   }
 
   @Override
